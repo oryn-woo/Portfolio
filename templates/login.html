@@ -1,0 +1,27 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+{% from "bootstrap5/form.html" import render_form, render_field %}
+
+
+</head>
+<body>
+<div class="login-background">
+    <div class="container-fluid"> <!-- Take full width on smaller screens with fluid property-->
+        <div class="row justify-content-center align-items-center vh-100">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-5"> <!-- col-12 ensures full width on small screens, col-sm, col-md, and col-lg, control column width on large and medium screen size.-->
+                <div class="glass-card shadow-sm shadow-lg p-4 rounded">
+                    <h2 class="text-center text-blue text-primary font-weight-bold">Welcome Back</h2>
+                    {{ render_form(form, novalidate=True, button_map={'submit': 'warning'}) }}
+                    <a href="{{ url_for('home') }}" class="text-decoration-none text-info font-weight-bold">back home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

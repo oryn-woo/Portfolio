@@ -49,11 +49,11 @@ def save(data: dict):
     :return: None
     """
     try:
-        with open("../portfolio/data.json", "r") as data_file:
+        with open("data.json", "r") as data_file:
             file = json.load(data_file)
             # json.load() converts json into a python object (dictionary)
     except FileNotFoundError:
-        with open("../portfolio/data.json", "w") as data_file:
+        with open("data.json", "w") as data_file:
             # if file not found, we create a new file in write mode.
             json.dump(data, data_file, indent=4)
             # json.dump() converts python object data into json data, and pretty-prints it with and indentation of 4
@@ -66,9 +66,16 @@ def save(data: dict):
         # If no exception occurred during loading of the json, the code updates the file dictionary with new data
         # using the update() method
 
-        with open("../portfolio/data.json", "w") as data_file:
+        with open("data.json", "w") as data_file:
             # The updated file dictionary is then written back to the data.json file using the json.dump()
             json.dump(file, data_file, indent=4)
+
+# def save(data: dict):
+#     try:
+#         with open("data.json", "w") as data_file:
+#             json.dump(data, data_file, indent=4)
+#     except Exception as e:
+#         print(f"An error occurred: {e}")
 
 def load_data(filepath):
     """
@@ -78,8 +85,8 @@ def load_data(filepath):
     """
     with open(filepath) as f:
         data = json.load(f)
-    data_dict = {item["project_id"]: item for item in data["data"]}
-    return data_dict
+    return data
+
 
 def requires_auth(f):
     """
@@ -96,7 +103,7 @@ def requires_auth(f):
 
 
 def generate_signed_id(project_id):
-    return hmac.new(secret_key.encode(), project_id.encode(), hashlib.sha256().hexdigest())
+    return hmac.new(secret_key.encode(), project_id.encode(), hashlib.sha256).hexdigest()
 
 
 def verify_signed_id(signed_id, project_id):
@@ -106,14 +113,14 @@ def verify_signed_id(signed_id, project_id):
 
 @app.route("/add-project", methods=["POST", "GET"])
 @requires_auth
-def post():
+def add_project():
     form = Project()
-    project_id = uuid.uuid4()
+    project_id = str(uuid.uuid4())
     signed_id = generate_signed_id(str(project_id))
     if form.validate_on_submit():
         data = {
             f"{form.title.data}": {
-                "id": project_id,
+                "project_id": project_id,
                 "signed_id": signed_id,
                 "title": form.title.data,
                 "overview": form.overview.data,
@@ -130,7 +137,7 @@ def post():
 @app.route("/")
 def home():
     try:
-        with open("../portfolio/data.json") as data_file:
+        with open("data.json") as data_file:
             projects = json.load(data_file)
     except FileNotFoundError:
         pass
@@ -138,35 +145,65 @@ def home():
     return render_template("index.html", projects=projects)
 
 
-@app.route("/edit-project/<string:signed_id>")
+@app.route("/edit-project/<string:signed_id>", methods=["POST", "GET"])
 @requires_auth
 def edit_project(signed_id):
     form = Project()
     data_dict = load_data("data.json")
-    data = data_dict.get(signed_id)
+    found_key = None
+    found_details = None
 
-    if data["signed_id"] == signed_id:
-        if verify_signed_id(signed_id=signed_id, project_id=str(data["project_id"])):
-            form.title.data = data["title"]
-            form.overview.data = data["overview"]
-            form.description.data = data["description"]
-            form.link.data = data["link"]
-        else:
-           return "The sign ID is invalid", 403
+    for project_title, details in data_dict.items():
+        if details["signed_id"] == signed_id:
+            if verify_signed_id(signed_id=signed_id, project_id=str(details["project_id"])):
+                found_key = project_title
+                found_details = details
+
+                form.title.data = details["title"]
+                form.overview.data = details["overview"]
+                form.description.data = details["description"]
+                form.link.data = details["link"]
+                break  # Stop after getting the correct project.
+            else:
+               return "The sign ID is invalid", 403
+
+    if not found_key:
+        return "Project Not found", 404
 
     if form.validate_on_submit():
-        data_dict[data["project_id"]] = {
-            f"{form.title.data}": {
-                "id": data['project_id'],
-                "signed_id": signed_id,
-                "title": form.title.data,
-                "overview": form.overview.data,
-                "description": form.description.data,
-                "link": form.link.data,
-                "gradient": f"aurora-{data['project_id']}"
-            }
-        }
-        save(data)
+        try:
+            with open("data.json", "r") as file:
+                data = json.load(file)
+            for project_title, details in data.items():
+                if details["signed_id"] == signed_id:
+                    details["overview"] = form.overview.data
+                    details["description"] = form.description.data
+                    details["link"] = form.link.data
+                    break
+
+            with open("data.json", "w") as file:
+                json.dump(data, file, indent=4)
+            print("Data in data.json updated successfully")
+        except FileNotFoundError:
+            print("Error file not found")
+        except json.JSONDecodeError:
+            print("Error could not decode json")
+        except Exception as e:
+            print(f"Exception occurred: {e}")
+        # new_key = form.title.data
+        # updated_project_data = {
+        #         "project_id": found_details['project_id'],
+        #         "signed_id": signed_id,
+        #         "title": form.title.data,
+        #         "overview": form.overview.data,
+        #         "description": form.description.data,
+        #         "link": form.link.data,
+        #         "gradient": f"aurora-{found_details['project_id']}"
+        # }
+        # if found_key != new_key:
+        #     data_dict.pop(found_key, None)
+        # data_dict[new_key] = updated_project_data
+        # save(data_dict)
         return redirect(url_for("home"))
 
     return render_template("addproject.html", form=form)
@@ -181,7 +218,7 @@ def login():
         if username == "admin" and password == "admin":
             session["authenticated"] = True
             return redirect(url_for("home"))
-    return render_template("login.html")
+    return render_template("login.html", form=form)
 
 
 @app.route("/projects")
@@ -189,6 +226,20 @@ def login():
 def get_projects():
     projects = load_data("data.json")
     return jsonify(projects)
+
+
+@app.route("/delete-project/<string:signed_id>")
+def delete_project(signed_id: str):
+    data_dict = load_data("data.json")
+    for title, details in list(data_dict.items()):
+        if details["signed_id"] == signed_id:
+            if verify_signed_id(signed_id=signed_id, project_id=str(details["project_id"])):
+                del data_dict[title]
+                break
+    with open('data.json', "w") as file:
+        json.dump(data_dict, file, indent=4)
+    return redirect(url_for("home"))
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)

@@ -15,7 +15,7 @@
                 <div class="glass-card shadow-sm shadow-lg p-4 rounded">
                     <h2 class="text-center text-blue text-primary font-weight-bold">Welcome Back!🏡🏡</h2>
                     <p class="text-center text-blue text-muted ">More Adventures.</p>
-                    {{ render_form(form, novalidate=True, button_map={'submit': 'warning'}) }}
+                    {{ render_form(form, button_map={'submit': 'warning'}) }}
                     <a href="{{ url_for('home') }}" class="text-decoration-none text-info font-weight-bold">back home</a>
                 </div>
             </div>
