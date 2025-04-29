@@ -1,23 +1,24 @@
 from markupsafe import Markup
-from flask import Flask, render_template, url_for, redirect, session, abort, jsonify
+from flask import Flask, render_template, url_for, redirect, session, abort, jsonify, request
 from wtforms import StringField, TextAreaField, URLField, SubmitField, PasswordField
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired, ValidationError, URL
 from flask_bootstrap import Bootstrap5
 import os
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 import json
 from functools import wraps
 import uuid
 import hmac
 import hashlib
+import smtplib
+from email.mime.multipart import  MIMEMultipart
+from email.mime.text import MIMEText
 
-
-secret_key = "jmjmnv438jr90324rfjkmdcmeoid90239"
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "edjweoideopqpowoowqopwqodk9043r8r438rhcvnnrwiwr"
+app.config["SECRET_KEY"] = os.environ.get("FLASK_KEY")
 bootstrap = Bootstrap5(app)
-# load_dotenv()
+load_dotenv()
 
 
 class Project(FlaskForm):
@@ -32,6 +33,7 @@ class Project(FlaskForm):
     description = TextAreaField(label="Details of Project", validators=[DataRequired()])
     link = URLField(label="Link", validators=[DataRequired(), URL()])
     submit = SubmitField("Upload")
+
 
 class Login(FlaskForm):
     user_name = StringField(label='username')
@@ -76,7 +78,6 @@ def save(data: dict):
 #             json.dump(data, data_file, indent=4)
 #     except Exception as e:
 #         print(f"An error occurred: {e}")
-
 def load_data(filepath):
     """
     Loads the content of the data.json and arranges them based on id
@@ -103,7 +104,7 @@ def requires_auth(f):
 
 
 def generate_signed_id(project_id):
-    return hmac.new(secret_key.encode(), project_id.encode(), hashlib.sha256).hexdigest()
+    return hmac.new(app.config["SECRET_KEY"].encode(), project_id.encode(), hashlib.sha256).hexdigest()
 
 
 def verify_signed_id(signed_id, project_id):
@@ -111,6 +112,31 @@ def verify_signed_id(signed_id, project_id):
     return hmac.compare_digest(signed_id, expected_signed_id)
 
 
+def send_email(name, sender_email, message):
+    # Email parameters
+    receiver_email = "oryngalabe@gmail.com"
+    subject = f"Message from {name}"
+
+    # Message
+    msg = MIMEMultipart()
+    msg["From"] = sender_email
+    msg["To"] = receiver_email
+    msg["Subject"] = subject
+    body = f"Name: {name}\nEmail: {sender_email}\nMessage: {message}"
+    msg.attach(MIMEText(body, "plain"))
+
+    # Send eamail
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(receiver_email, "password")
+        text = msg.as_string()
+        server.sendmail(sender_email, receiver_email, text)
+        server.quit()
+        return True
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
 @app.route("/add-project", methods=["POST", "GET"])
 @requires_auth
 def add_project():
@@ -136,77 +162,79 @@ def add_project():
 
 @app.route("/")
 def home():
+    projects = {}  # Initialize with and empty dictionary
     try:
         with open("data.json") as data_file:
             projects = json.load(data_file)
     except FileNotFoundError:
-        pass
+        # If no project is found we stay with and empty dict, to avoid template errors.
+        projects = {}
 
     return render_template("index.html", projects=projects)
 
-
-@app.route("/edit-project/<string:signed_id>", methods=["POST", "GET"])
-@requires_auth
-def edit_project(signed_id):
-    form = Project()
-    data_dict = load_data("data.json")
-    found_key = None
-    found_details = None
-
-    for project_title, details in data_dict.items():
-        if details["signed_id"] == signed_id:
-            if verify_signed_id(signed_id=signed_id, project_id=str(details["project_id"])):
-                found_key = project_title
-                found_details = details
-
-                form.title.data = details["title"]
-                form.overview.data = details["overview"]
-                form.description.data = details["description"]
-                form.link.data = details["link"]
-                break  # Stop after getting the correct project.
-            else:
-               return "The sign ID is invalid", 403
-
-    if not found_key:
-        return "Project Not found", 404
-
-    if form.validate_on_submit():
-        try:
-            with open("data.json", "r") as file:
-                data = json.load(file)
-            for project_title, details in data.items():
-                if details["signed_id"] == signed_id:
-                    details["overview"] = form.overview.data
-                    details["description"] = form.description.data
-                    details["link"] = form.link.data
-                    break
-
-            with open("data.json", "w") as file:
-                json.dump(data, file, indent=4)
-            print("Data in data.json updated successfully")
-        except FileNotFoundError:
-            print("Error file not found")
-        except json.JSONDecodeError:
-            print("Error could not decode json")
-        except Exception as e:
-            print(f"Exception occurred: {e}")
-        # new_key = form.title.data
-        # updated_project_data = {
-        #         "project_id": found_details['project_id'],
-        #         "signed_id": signed_id,
-        #         "title": form.title.data,
-        #         "overview": form.overview.data,
-        #         "description": form.description.data,
-        #         "link": form.link.data,
-        #         "gradient": f"aurora-{found_details['project_id']}"
-        # }
-        # if found_key != new_key:
-        #     data_dict.pop(found_key, None)
-        # data_dict[new_key] = updated_project_data
-        # save(data_dict)
-        return redirect(url_for("home"))
-
-    return render_template("addproject.html", form=form)
+#
+# @app.route("/edit-project/<string:signed_id>", methods=["POST", "GET"])
+# @requires_auth
+# def edit_project(signed_id):
+#     form = Project()
+#     data_dict = load_data("data.json")
+#     found_key = None
+#     found_details = None
+#
+#     for project_title, details in data_dict.items():
+#         if details["signed_id"] == signed_id:
+#             if verify_signed_id(signed_id=signed_id, project_id=str(details["project_id"])):
+#                 found_key = project_title
+#                 found_details = details
+#
+#                 form.title.data = details["title"]
+#                 form.overview.data = details["overview"]
+#                 form.description.data = details["description"]
+#                 form.link.data = details["link"]
+#                 break  # Stop after getting the correct project.
+#             else:
+#                return "The sign ID is invalid", 403
+#
+#     if not found_key:
+#         return "Project Not found", 404
+#
+#     if form.validate_on_submit():
+#         try:
+#             with open("data.json", "r") as file:
+#                 data = json.load(file)
+#             for project_title, details in data.items():
+#                 if details["signed_id"] == signed_id:
+#                     details["overview"] = form.overview.data
+#                     details["description"] = form.description.data
+#                     details["link"] = form.link.data
+#                     break
+#
+#             with open("data.json", "w") as file:
+#                 json.dump(data, file, indent=4)
+#             print("Data in data.json updated successfully")
+#         except FileNotFoundError:
+#             print("Error file not found")
+#         except json.JSONDecodeError:
+#             print("Error could not decode json")
+#         except Exception as e:
+#             print(f"Exception occurred: {e}")
+#         # new_key = form.title.data
+#         # updated_project_data = {
+#         #         "project_id": found_details['project_id'],
+#         #         "signed_id": signed_id,
+#         #         "title": form.title.data,
+#         #         "overview": form.overview.data,
+#         #         "description": form.description.data,
+#         #         "link": form.link.data,
+#         #         "gradient": f"aurora-{found_details['project_id']}"
+#         # }
+#         # if found_key != new_key:
+#         #     data_dict.pop(found_key, None)
+#         # data_dict[new_key] = updated_project_data
+#         # save(data_dict)
+#         return redirect(url_for("home"))
+#
+#     return render_template("addproject.html", form=form)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -215,9 +243,11 @@ def login():
     if form.validate_on_submit():
         username = form.user_name.data
         password = form.password.data
-        if username == "admin" and password == "admin":
+        if username == os.environ.get('USER_NAME') and password == os.environ.get("PASSWORD"):
             session["authenticated"] = True
             return redirect(url_for("home"))
+        else:
+            abort(404)
     return render_template("login.html", form=form)
 
 
@@ -229,6 +259,7 @@ def get_projects():
 
 
 @app.route("/delete-project/<string:signed_id>")
+@requires_auth
 def delete_project(signed_id: str):
     data_dict = load_data("data.json")
     for title, details in list(data_dict.items()):
@@ -239,6 +270,24 @@ def delete_project(signed_id: str):
     with open('data.json', "w") as file:
         json.dump(data_dict, file, indent=4)
     return redirect(url_for("home"))
+
+
+@app.route("/logout")
+def logout():
+    if "authenticated" in session:
+        session.clear()
+    return redirect(url_for("home"))
+
+
+@app.route("/contact", methods=["POST"])
+def contact():
+    name = request.form["name"]
+    sender_email = request.form["email"]
+    message = request.form["message"]
+    if send_email(name, sender_email, message):
+        return redirect(url_for("home"))
+    else:
+        return "Error sending message", 500
 
 
 if __name__ == "__main__":

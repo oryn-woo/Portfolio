@@ -6,90 +6,15 @@
   <title>Portfolio with Sidebar</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
   <style>
     body {
-      background: url("static/images/aurora1.jpeg") no-repeat center center;
+      background: url("../static/images/aurora1.jpeg") no-repeat center center;
       background-size: cover;
-    }
-    /* Sidebar styles */
-
-    .sidebar {
-      position: relative;
-      height: 150vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-right: 1px solid #ddd;
-      padding: 1rem;
     }
     .sidebar::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url("static/images/house10.jpeg") no-repeat center center;
+    background: url("static/images/house10.jpeg") no-repeat center center;
         background-size: cover;
-        filter: blur(2px) contrast(0.9) brightness(0.9);
-        z-index: -1;
-    }
-    .sidebar img {
-      width: 150px;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 50%;
-    }
-    /* Content styles */
-    .content {
-      padding: 2rem;
-    }
-    section {
-      margin-bottom: 2rem;
-      justify-content: center;
-    }
-    .nav-link {
-      font-weight: bold;
-    }
-
-    /* Aurora gradient classes */
-    .aurora-1 {
-      background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
-      background-size: cover;
-      color: #fff;
-    }
-    .aurora-2 {
-      background: linear-gradient(135deg, #1e3c72, #2a5298, #4facfe);
-      background-size: cover;
-      color: #fff;
-    }
-    .aurora-3 {
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      background-size: cover;
-      color: #fff;
-    }
-
-    /* Ensure modal text remains readable */
-    .modal .modal-content {
-    }
-
-    .text-lost {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    over-flow: hidden;
-    white-space: wrap;
-    text-overflow: ellipsis;
-    }
-
-    /* Media query for small screens */
-    @media (max-width: 768px) {
-      .sidebar {
-        height: 300px;
-        border-right: none;
-        border-bottom: 1px solid #ddd;
-      }
     }
   </style>
 </head>
@@ -115,36 +40,35 @@
           </ul>
         </nav>
         <!-- Hero Section -->
-        <section id="hero">
-          <h1 class="text-center">Welcome to My Portfolio</h1>
+        <section id="hero" class="d-flex flex-column align-items-center justify-content-center text-center">
+          <h1>Welcome to My Portfolio</h1>
           <p class="lead ">I am a passionate developer ready to showcase my work!</p>
-          <a href="#projects" class="btn btn-primary">View My Work</a>
+          <a href="#projects" class="btn btn-primary mt-3">View My Work</a>
         </section>
         <!-- About Section -->
-        <section id="about">
+        <section id="about" class="d-flex flex-column align-items-center justify-content-center text-center">
           <h2 class="text-center">About Me</h2>
           <p>This is where you share your story, your skills, and your passion for development.</p>
         </section>
         <!-- Projects Section -->
-        <section id="projects">
+        <section id="projects mt-3 mb-3">
           <h2 class="text-center">Projects</h2>
           <div class="row">
-            <!-- Example Card 1 -->
+            <!-- Card  -->
             {% for project_name, project_details in projects.items() %}
             <div class="col-md-6 mb-3">
               <div class="card project-card {{project_details.gradient}}">
                 <div class="card-body">
                   <h5 class="card-title">{{ project_details.title }}</h5>
                   <p class="card-text text-lost">{{ project_details.overview }}.</p>
-                  <button class="btn btn-secondary open-modal" data-bs-toggle="modal" data-bs-target="#productModal-{{ loop.index }}">
+                  <button class="btn btn-secondary open-modal" data-bs-toggle="modal" data-bs-target="#productModal-{{ project_details.project_id }}">
                     View Details
                   </button>
                 </div>
               </div>
             </div>
             {% endfor %}
-            <!-- Example Card 2 -->
-            <!-- Add more cards as needed -->
+
           </div>
         </section>
         <!-- Contact Section -->
@@ -168,79 +92,51 @@
           </form>
         </section>
         {% if "authenticated" in session %}
-        <div>
+        <div class="mb-3">
           <a href="{{ url_for('add_project')}}" class="btn btn-secondary">Add Project</a>
+        </div>
+        <div class="mb-3">
+          <a href="{{ url_for('logout')}}" class="btn btn-danger">Logout</a>
         </div>
         {% endif %}
       </div>
     </div>
   </div>
 
-
   {% for project_name, project_details in projects.items() %}
-  <!-- Single Modal for All Projects -->
-    <div class="modal fade" id="productModal-{{ loop.index }}" tabindex="-1" aria-labelledby="productModalLabel-{{ loop.index }}" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="productModalLabel-{{ loop.index }}">{{ project_details.title }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- More larger image and more details can be added here-->
-                  <h2>{{ project_details.Title }}</h2>
-                  <p> {{ project_details.overview}}</p>
-                  <p> {{ project_details.description }} </p>
+<!-- Eye-Catching Customized Modal -->
+<div class="modal fade" id="productModal-{{ project_details.project_id }}" tabindex="-1" aria-labelledby="productModalLabel-{{ project_details.project_id }}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content custom-modal-content">
+      <div class="modal-header custom-modal-header">
+        <h5 class="modal-title" id="productModalLabel-{{ project_details.project_id }}">{{ project_details.title }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body custom-modal-body">
+        <div class="row">
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  {% if 'authenticated' in session %}
-                    <a href="{{ url_for('delete_project', signed_id=project_details.signed_id)}}" class="btn btn-primary">Delete</a>
-                  {% endif %}
-                </div>
-            </div>
+          <div class="col-md-8">
+            <h4 class="fw-bold">{{ project_details.title }}</h4>
+            <p class="lead">{{ project_details.overview }}</p>
+            <p>{{ project_details.description }}</p>
+            <a href="{#{{url_for(project_details.link)}}#}" class="btn btn-primary">To Repository</a>
+
+          </div>
         </div>
+      </div>
+      <div class="modal-footer custom-modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+        {% if 'authenticated' in session %}
+          <a href="{{ url_for('delete_project', signed_id=project_details.signed_id) }}" class="btn btn-danger">Delete</a>
+        {% endif %}
+      </div>
     </div>
-    {% endfor %}
-  <!-- Bootstrap JS Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </div>
+</div>
+{% endfor %}
 
-  <script>
-<!--    document.addEventListener("DOMContentLoaded", () => {-->
-<!--      const gradients = ["aurora-1", "aurora-2", "aurora-3"];-->
-<!--      -->
-<!--      // Assign a random gradient to each project card-->
-<!--      const cards = document.querySelectorAll(".project-card");-->
-<!--      cards.forEach(card => {-->
-<!--        const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];-->
-<!--        card.classList.add(randomGradient);-->
-<!--      });-->
-<!--      -->
-<!--      // Update modal content and gradient on show-->
-<!--      const projectModal = document.getElementById('projectModal');-->
-<!--      projectModal.addEventListener('show.bs.modal', function (event) {-->
-<!--        const button = event.relatedTarget;-->
-<!--        const title = button.getAttribute('data-title');-->
-<!--        const content = button.getAttribute('data-content');-->
-<!--        const modalTitle = projectModal.querySelector('.modal-title');-->
-<!--        const modalBody = projectModal.querySelector('.modal-body');-->
-<!--        -->
-<!--        // Set text content-->
-<!--        modalTitle.textContent = title;-->
-<!--        modalBody.textContent = content;-->
-<!--        -->
-<!--        // Remove any existing aurora classes from the modal-->
-<!--        gradients.forEach(grad => projectModal.classList.remove(grad));-->
-<!--        -->
-<!--        // Get the gradient class from the parent card of the button-->
-<!--        const card = button.closest(".project-card");-->
-<!--        const cardGradient = gradients.find(grad => card.classList.contains(grad));-->
-<!--        if (cardGradient) {-->
-<!--          projectModal.classList.add(cardGradient);-->
-<!--        }-->
-<!--      });-->
-<!--    });-->
-  </script>
+  <!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
