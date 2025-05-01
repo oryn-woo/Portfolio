@@ -3,7 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Portfolio with Sidebar</title>
+
+  <title>{{ page_title }}</title>
+  <meta property="og:description" content="{{ page_description }}">
+  <meta property="og:url" content="{{ request.url_root }}">
+  <meta property="og.image" content="{{ url_for('static', filename=og_image, _external=True) }}">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{page_title}}">
+  <meta name="twitter:description" content="{{ page_description }}">
+  <meta name="twitter:image" content="{{ url_for('static', filename=og_image, _external=True) }}">
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
@@ -13,7 +22,7 @@
       background-size: cover;
     }
     .sidebar::before {
-    background: url("static/images/house10.jpeg") no-repeat center center;
+    background: url("static/images/prof-img1.jpeg") no-repeat center center;
         background-size: cover;
     }
   </style>
@@ -23,7 +32,7 @@
     <div class="row">
       <!-- Left Sidebar -->
       <div class="col-md-4 sidebar">
-        <img src="{{url_for('static', filename='images/house10.jpeg')}}" alt="Profile Image">
+        <img src="{{url_for('static', filename='images/prof-img1.jpeg')}}" alt="Profile Image">
         <h2 class="mt-3">My Portfolio</h2>
       </div>
 
@@ -32,44 +41,72 @@
         <!-- Navigation for mobile -->
         <nav class="mb-3 d-md-none">
           <ul class="nav justify-content-center">
-            <li class="nav-item"><a class="nav-link" href="#hero">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="#hero">About</a></li>
             <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
             <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}"></a> </li>
+            {% if show_login%}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+            {% endif %}
           </ul>
         </nav>
         <!-- Hero Section -->
-        <section id="hero" class="d-flex flex-column align-items-center justify-content-center text-center">
-          <h1>Welcome to My Portfolio</h1>
-          <p class="lead ">I am a passionate developer ready to showcase my work!</p>
-          <a href="#projects" class="btn btn-primary mt-3">View My Work</a>
-        </section>
+        <!-- Hero Section -->
+<section id="hero" class="d-flex align-items-center vh-100 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 text-center p-5 shadow rounded">
+        <h1 class="display-4 mb-4">Full Stack Developer &amp; Python Enthusiast</h1>
+        <p class="lead mb-4">
+          I am proficient in Python and completed the hands-on 100 Days of Code course by Dr. Angela Yu.
+          I excel in:
+        </p>
+        <ul class="list-inline mb-4">
+          <li class="list-inline-item mx-2"><strong>Python</strong></li>
+          <li class="list-inline-item mx-2"><strong>Flask</strong></li>
+          <li class="list-inline-item mx-2"><strong>HTML</strong></li>
+          <li class="list-inline-item mx-2"><strong>CSS</strong></li>
+          <li class="list-inline-item mx-2"><strong>SQLAlchemy</strong></li>
+        </ul>
+        <p class="mb-4">
+          I’ve built multiple scripts and projects—check them out in the Projects section. I’m focused on problem solving and delivering the best.
+        </p>
+        <a href="#projects" class="btn btn-primary btn-lg rounded-pill">View My Projects</a>
+      </div>
+    </div>
+  </div>
+</section>
         <!-- About Section -->
         <section id="about" class="d-flex flex-column align-items-center justify-content-center text-center">
           <h2 class="text-center">About Me</h2>
           <p>This is where you share your story, your skills, and your passion for development.</p>
         </section>
         <!-- Projects Section -->
-        <section id="projects mt-3 mb-3">
-          <h2 class="text-center">Projects</h2>
-          <div class="row">
-            <!-- Card  -->
-            {% for project_name, project_details in projects.items() %}
-            <div class="col-md-6 mb-3">
-              <div class="card project-card {{project_details.gradient}}">
-                <div class="card-body">
-                  <h5 class="card-title">{{ project_details.title }}</h5>
-                  <p class="card-text text-lost">{{ project_details.overview }}.</p>
-                  <button class="btn btn-secondary open-modal" data-bs-toggle="modal" data-bs-target="#productModal-{{ project_details.project_id }}">
-                    View Details
-                  </button>
-                </div>
-              </div>
-            </div>
-            {% endfor %}
-
+        <section id="projects">
+          <div class="mb-3">
+              <h2 class="text-center">Projects</h2>
           </div>
+          <div class="container my-4">
+  <div class="row d-flex flex-wrap align-items-stretch">
+    {% for project_name, project_details in projects.items() %}
+    <div class="col-12 col-sm-8 col-md-6 col-lg-4 d-flex mb-3">
+      <div class="card h-100 shadow-lg rounded project-card">
+
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ project_details.title }}</h5>
+          <p class="card-text flex-grow-1">{{ project_details.overview }}</p>
+          <div class="mt-auto text-center">
+            <button class="btn btn-primary open-modal rounded-pill px-4 py-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#productModal-{{ project_details.project_id }}">
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
         </section>
         <!-- Contact Section -->
         <section id="contact">
@@ -118,8 +155,10 @@
           <div class="col-md-8">
             <h4 class="fw-bold">{{ project_details.title }}</h4>
             <p class="lead">{{ project_details.overview }}</p>
-            <p>{{ project_details.description }}</p>
-            <a href="{#{{url_for(project_details.link)}}#}" class="btn btn-primary">To Repository</a>
+            <div>
+              {{ project_details.description | safe }}
+            </div>
+            <a href="{{ project_details.link }}" class="btn btn-primary">To Repository</a>
 
           </div>
         </div>

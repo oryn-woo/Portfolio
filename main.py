@@ -14,11 +14,13 @@ import hashlib
 import smtplib
 from email.mime.multipart import  MIMEMultipart
 from email.mime.text import MIMEText
+from flask_ckeditor import CKEditorField, CKEditor
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("FLASK_KEY")
 bootstrap = Bootstrap5(app)
 load_dotenv()
+ckeditor = CKEditor(app)
 
 
 class Project(FlaskForm):
@@ -30,7 +32,7 @@ class Project(FlaskForm):
 
     title = StringField(label="Project Title", validators=[DataRequired(), max_length])
     overview = TextAreaField(label="Project Overview", validators=[DataRequired()])
-    description = TextAreaField(label="Details of Project", validators=[DataRequired()])
+    description = CKEditorField(label="Details of Project", validators=[DataRequired()])
     link = URLField(label="Link", validators=[DataRequired(), URL()])
     submit = SubmitField("Upload")
 
@@ -39,6 +41,13 @@ class Login(FlaskForm):
     user_name = StringField(label='username')
     password = PasswordField(label="password")
     submit = SubmitField("login")
+
+
+meta_data = {
+    "page_title": "My Portfolio - Galabe Oryn",
+    "page_description": "Full-Stack dev (Python, Flask) showcasing my projects",
+    "og_image": "/images/metaimage.jpeg",
+}
 
 
 def save(data: dict):
@@ -112,15 +121,25 @@ def verify_signed_id(signed_id, project_id):
     return hmac.compare_digest(signed_id, expected_signed_id)
 
 
-def send_email(name, sender_email, message):
+def send_email(name: str, sender_email: str, message: str) -> bool:
+    """
+    Uses the MIMEMultipart library to create a message object, allowing multiple file types.
+    It then uses this instance to set the sender, recipient, and subject of the email.
+    Use the smtplib, which authenticates and sends the email.
+    Any errors are catch and print to the terminal.
+    :param name: Name of the Sender.
+    :param sender_email: The email address of the sender.
+    :param message: The message sent by the user.
+    :return: A boolean if email sent was successful or not.
+    """
     # Email parameters
     receiver_email = "oryngalabe@gmail.com"
     subject = f"Message from {name}"
 
     # Message
     msg = MIMEMultipart()
-    msg["From"] = sender_email
-    msg["To"] = receiver_email
+    msg["From"] = sender_email.strip()
+    msg["To"] = receiver_email.strip()
     msg["Subject"] = subject
     body = f"Name: {name}\nEmail: {sender_email}\nMessage: {message}"
     msg.attach(MIMEText(body, "plain"))
@@ -129,7 +148,7 @@ def send_email(name, sender_email, message):
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
-        server.login(receiver_email, "password")
+        server.login(receiver_email, os.environ.get("EMAIL_PASSWORD1"))
         text = msg.as_string()
         server.sendmail(sender_email, receiver_email, text)
         server.quit()
@@ -137,6 +156,8 @@ def send_email(name, sender_email, message):
     except Exception as e:
         print(f"Error: {e}")
         return False
+
+
 @app.route("/add-project", methods=["POST", "GET"])
 @requires_auth
 def add_project():
@@ -162,6 +183,7 @@ def add_project():
 
 @app.route("/")
 def home():
+    show_login = request.args.get("auth") == os.environ.get("AUTH")
     projects = {}  # Initialize with and empty dictionary
     try:
         with open("data.json") as data_file:
@@ -170,7 +192,7 @@ def home():
         # If no project is found we stay with and empty dict, to avoid template errors.
         projects = {}
 
-    return render_template("index.html", projects=projects)
+    return render_template("index.html", projects=projects, show_login=show_login, **meta_data)
 
 #
 # @app.route("/edit-project/<string:signed_id>", methods=["POST", "GET"])
