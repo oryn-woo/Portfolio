@@ -1,29 +1,44 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add Project / Login</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-{% from "bootstrap5/form.html" import render_form, render_field %}
+  {% from "bootstrap5/form.html" import render_form, render_field %}
+  <style>
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85); /* Slight transparency for a "glass" effect */
+      border-radius: 10px;
+    }
 
-
+    input.form-control,
+    textarea.form-control,
+    select.form-control {
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+    }
+  </style>
 </head>
 <body>
 <div class="login-background">
-    <div class="container-fluid"> <!-- Take full width on smaller screens with fluid property-->
-        <div class="row justify-content-center align-items-center vh-100">
-            <div class="col-12 col-sm-10 col-md-8 col-lg-5"> <!-- col-12 ensures full width on small screens, col-sm, col-md, and col-lg, control column width on large and medium screen size.-->
-                <div class="glass-card shadow-sm shadow-lg p-4 rounded">
-                    <h2 class="text-center text-blue text-primary font-weight-bold">Welcome Back!🏡🏡</h2>
-                    <p class="text-center text-blue text-muted ">More Adventures.</p>
-                    {{ render_form(form, button_map={'submit': 'warning'}) }}
-                    <a href="{{ url_for('home') }}" class="text-decoration-none text-info font-weight-bold">back home</a>
-                </div>
-            </div>
+  <div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+      <div class="col-11 col-sm-10 col-md-8 col-lg-5">
+        <div class="glass-card shadow-sm p-4 rounded">
+          <h2 class="text-center text-primary fw-bold">Welcome Back Oryn</h2>
+          <p class="text-center text-muted">More Adventures.</p>
+          {{ render_form(form, button_map={'submit': 'warning'}) }}
+          <a href="{{ url_for('home') }}" class="d-block text-center mt-3 text-info fw-bold">Back Home</a>
         </div>
+      </div>
     </div>
+  </div>
 </div>
+
 {{ ckeditor.load() }}
 {{ ckeditor.config(name='description') }}
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -133,7 +133,7 @@ def send_email(name: str, sender_email: str, message: str) -> bool:
     :return: A boolean if email sent was successful or not.
     """
     # Email parameters
-    receiver_email = "oryngalabe@gmail.com"
+    receiver_email = os.environ.get("EMAIL")
     subject = f"Message from {name}"
 
     # Message
@@ -148,7 +148,7 @@ def send_email(name: str, sender_email: str, message: str) -> bool:
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
-        server.login(receiver_email, os.environ.get("EMAIL_PASSWORD1"))
+        server.login(receiver_email, os.environ.get("EMAIL_PASSWORD2"))
         text = msg.as_string()
         server.sendmail(sender_email, receiver_email, text)
         server.quit()

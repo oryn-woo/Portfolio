@@ -1,3 +1,10 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
 body {
       background: url("../static/images/aurora1.jpeg") no-repeat center center;
       background-size: cover;
@@ -12,7 +19,7 @@ body {
       align-items: center;
       justify-content: center;
       border-right: 1px solid #ddd;
-      padding: 1rem;
+      padding: 2rem;
     }
     .sidebar::before {
         content: '';
@@ -45,43 +52,14 @@ body {
     }
 
 
-    /* Ensure modal text remains readable */
-    .modal .modal-content {
-    }
-
-    .text-lost {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    over-flow: hidden;
-    white-space: wrap;
-    text-overflow: ellipsis;
-    }
-
-    /* Media query for small screens */
-    @media (max-width: 768px) {
-      .sidebar {
-        height: 300px;
-        border-right: none;
-        border-bottom: 1px solid #ddd;
-      }
-    }
-
-
-
-
-
-
-
-
 
 
 .custom-modal-content {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(270deg, #00ccff 25%, #0099ff 50%, #0066cc 75%, #003393 100%);
   color: #fff;
   border: none;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
+  border-radius: 10px
 }
 
 .custom-modal-header, .custom-modal-footer {
@@ -105,11 +83,13 @@ body {
 /* Hero Section*/
 #hero {
     display: flex;
+    min-height: 100vh;
     flex-direction: column;
     align-items: center;
     justify-content: center; /* Center both horizontally & vertically */
     text-align: center; /* Centers text */
     padding: 50px 20px;
+    margin-bottom: 3rem;
 }
 
 .btn-primary:hover {
@@ -126,4 +106,51 @@ body {
 h1, p {
     animation: fadeIn 1s ease-in-out;
 }
+
+
+
+
+
+
+
+    /* Ensure modal text remains readable */
+    .modal .modal-content {
+    }
+
+    .text-lost {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    over-flow: hidden;
+    white-space: wrap;
+    text-overflow: ellipsis;
+    }
+
+    /* Media query for small screens */
+    @media (max-width: 768px) {
+      .sidebar {
+        height: 300px;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+      }
+
+      #hero {
+      min-height: 80vh;
+      padding: 30px 10px;
+      }
+
+      #hero h1 {
+      font-size: 2.5rem;
+      }
+      #hero p, #hero ul {
+      font-size: 1rem;
+      }
+    }
+
+
+
+
+
+
+
 
