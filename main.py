@@ -3,7 +3,7 @@ from flask import Flask, render_template, url_for, redirect, session, abort, jso
 from wtforms import StringField, TextAreaField, URLField, SubmitField, PasswordField
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired, ValidationError, URL
-from flask_bootstrap import Bootstrap5
+from flask_bootstrap5 import Bootstrap
 import os
 from dotenv import load_dotenv
 import json
@@ -18,7 +18,7 @@ from flask_ckeditor import CKEditorField, CKEditor
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("FLASK_KEY")
-bootstrap = Bootstrap5(app)
+bootstrap = Bootstrap(app)
 load_dotenv()
 ckeditor = CKEditor(app)
 
