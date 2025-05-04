@@ -16,7 +16,8 @@ from email.mime.multipart import  MIMEMultipart
 from email.mime.text import MIMEText
 from flask_ckeditor import CKEditorField, CKEditor
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
+
 app.config["SECRET_KEY"] = os.environ.get("FLASK_KEY")
 bootstrap = Bootstrap(app)
 load_dotenv()

@@ -4,8 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4488387-4c86-480d-aeaf-f8be9a7d8df6" name="Changes" comment="upgrades in forms to reflect current updates and taking care of the Markup safe">
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
+    <list default="true" id="d4488387-4c86-480d-aeaf-f8be9a7d8df6" name="Changes" comment="updated the requirements.txt file to represent the current status of the application">
+      <change afterPath="$PROJECT_DIR$/aurora1.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/prof-img1.JPEG" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,16 +37,20 @@
     <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/Galabe-PC/PycharmProjects/portfolio3",
+    "settings.editor.selected.configurable": "preferences.general"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Galabe-PC\PycharmProjects\portfolio3\" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Galabe-PC\PycharmProjects\portfolio3\static\images" />
       <recent name="C:\Users\Galabe-PC\PycharmProjects\portfolio3\static\css" />
@@ -135,7 +144,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746329953466</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="updated the requirements.txt file to represent the current status of the application">
+      <option name="closed" value="true" />
+      <created>1746330345145</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1746330345145</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -158,6 +175,7 @@
     <MESSAGE value="added a requirement.txt file, and gunicorn" />
     <MESSAGE value="Create a Procfile and a contact button for Email and WhatsApp" />
     <MESSAGE value="upgrades in forms to reflect current updates and taking care of the Markup safe" />
-    <option name="LAST_COMMIT_MESSAGE" value="upgrades in forms to reflect current updates and taking care of the Markup safe" />
+    <MESSAGE value="updated the requirements.txt file to represent the current status of the application" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated the requirements.txt file to represent the current status of the application" />
   </component>
 </project>
