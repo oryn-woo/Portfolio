@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4488387-4c86-480d-aeaf-f8be9a7d8df6" name="Changes" comment="Finishing touches, and data upload, into data.json file for upload">
+    <list default="true" id="d4488387-4c86-480d-aeaf-f8be9a7d8df6" name="Changes" comment="added a requirement.txt file, and gunicorn">
+      <change afterPath="$PROJECT_DIR$/Procfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +107,23 @@
       <option name="project" value="LOCAL" />
       <updated>1746321242153</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="added a requirement.txt file, and gunicorn">
+      <option name="closed" value="true" />
+      <created>1746323252454</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1746323252454</updated>
+    </task>
+    <task id="LOCAL-00007" summary="added a requirement.txt file, and gunicorn">
+      <option name="closed" value="true" />
+      <created>1746323271469</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1746323271469</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -124,6 +143,7 @@
     <MESSAGE value="Finishing touches and upgrades to prepare the site for hosting." />
     <MESSAGE value="Fine grain adjustment in the entire code, in preparation for deployment." />
     <MESSAGE value="Finishing touches, and data upload, into data.json file for upload" />
-    <option name="LAST_COMMIT_MESSAGE" value="Finishing touches, and data upload, into data.json file for upload" />
+    <MESSAGE value="added a requirement.txt file, and gunicorn" />
+    <option name="LAST_COMMIT_MESSAGE" value="added a requirement.txt file, and gunicorn" />
   </component>
 </project>
