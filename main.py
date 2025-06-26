@@ -1,41 +1,29 @@
 from markupsafe import Markup
-from flask import Flask, render_template, url_for, redirect, session, abort, jsonify, request
-from wtforms import StringField, TextAreaField, URLField, SubmitField, PasswordField
+from flask import Flask, render_template, url_for, redirect, session, abort, jsonify, request, send_file
+from wtforms import StringField, SubmitField, PasswordField
 from flask_wtf import FlaskForm
-from wtforms.validators import DataRequired, ValidationError, URL
 from flask_bootstrap5 import Bootstrap
 import os
 from dotenv import load_dotenv
 import json
 from functools import wraps
-import uuid
 import hmac
 import hashlib
 import smtplib
 from email.mime.multipart import  MIMEMultipart
 from email.mime.text import MIMEText
-from flask_ckeditor import CKEditorField, CKEditor
+# from weasyprint import HTML
+import io
+import sys
+import pdfcrowd
 
 app = Flask(__name__, static_url_path='/static')
 
 app.config["SECRET_KEY"] = os.environ.get("FLASK_KEY")
 bootstrap = Bootstrap(app)
 load_dotenv()
-ckeditor = CKEditor(app)
 
-
-class Project(FlaskForm):
-    def max_length(self, field):
-        """"
-        This method ensures Titles dont get to long """
-        if len(field.data) > 50:
-            raise ValidationError("Should be less than 20 chars.")
-
-    title = StringField(label="Project Title", validators=[DataRequired(), max_length])
-    overview = TextAreaField(label="Project Overview", validators=[DataRequired()])
-    description = CKEditorField(label="Details of Project", validators=[DataRequired()])
-    link = URLField(label="Link", validators=[DataRequired(), URL()])
-    submit = SubmitField("Upload")
+# _____________ FORMS _____________#
 
 
 class Login(FlaskForm):
@@ -44,50 +32,8 @@ class Login(FlaskForm):
     submit = SubmitField("login")
 
 
-meta_data = {
-    "page_title": "My Portfolio - Galabe Oryn",
-    "page_description": "Full-Stack dev (Python, Flask) showcasing my projects",
-    "og_image": "/images/metaimage.jpeg",
-}
+# --------- Functions -------#
 
-
-def save(data: dict):
-    """
-    Receives the project data from the backend, which is rendered on the site,
-    Saves data in a JSON file.
-    The try block contains code that might raise an exception.
-    The except block contains code which is executed if this exception is raised.
-    :param data: JSON data uploaded from backend
-    :return: None
-    """
-    try:
-        with open("data.json", "r") as data_file:
-            file = json.load(data_file)
-            # json.load() converts json into a python object (dictionary)
-    except FileNotFoundError:
-        with open("data.json", "w") as data_file:
-            # if file not found, we create a new file in write mode.
-            json.dump(data, data_file, indent=4)
-            # json.dump() converts python object data into json data, and pretty-prints it with and indentation of 4
-    except json.JSONDecodeError:
-        print("Error decoding JSON")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-    else:
-        file.update(data)
-        # If no exception occurred during loading of the json, the code updates the file dictionary with new data
-        # using the update() method
-
-        with open("data.json", "w") as data_file:
-            # The updated file dictionary is then written back to the data.json file using the json.dump()
-            json.dump(file, data_file, indent=4)
-
-# def save(data: dict):
-#     try:
-#         with open("data.json", "w") as data_file:
-#             json.dump(data, data_file, indent=4)
-#     except Exception as e:
-#         print(f"An error occurred: {e}")
 def load_data(filepath):
     """
     Loads the content of the data.json and arranges them based on id
@@ -159,105 +105,67 @@ def send_email(name: str, sender_email: str, message: str) -> bool:
         return False
 
 
-@app.route("/add-project", methods=["POST", "GET"])
-@requires_auth
-def add_project():
-    form = Project()
-    project_id = str(uuid.uuid4())
-    signed_id = generate_signed_id(str(project_id))
-    if form.validate_on_submit():
-        data = {
-            f"{form.title.data}": {
-                "project_id": project_id,
-                "signed_id": signed_id,
-                "title": form.title.data,
-                "overview": form.overview.data,
-                "description": form.description.data,
-                "link": form.link.data,
-                "gradient": f"aurora-{project_id}"
-            }
-        }
-        save(data)
-        return redirect(url_for("home"))
-    return render_template("addproject.html", form=form)
+def load_resume():
+    resume_path = os.path.join(os.path.dirname(__file__), "resume.json")
+    with open(resume_path, encoding="utf-8") as f:
+        return json.load(f)
 
 
-@app.route("/")
+# --------- Routes ---------#
+@app.route('/')
 def home():
-    show_login = request.args.get("auth") == os.environ.get("AUTH")
-    projects = {}  # Initialize with and empty dictionary
+
     try:
         with open("data.json") as data_file:
-            projects = json.load(data_file)
+            data = json.load(data_file)
     except FileNotFoundError:
         # If no project is found we stay with and empty dict, to avoid template errors.
-        projects = {}
+        data = {}
 
-    return render_template("index.html", projects=projects, show_login=show_login, **meta_data)
+    return render_template('index2.html',
+                           page_title="Galabe Oryn - Portfolio",
+                           page_description="Portfolio of a Full Stack Developer and Python Enthusiast.",
+                           og_image="images/logo2.jpg",
+                           show_login=not session.get('authenticated'),
+                           **data)
+
+
+@app.route("/resume")
+def resume():
+    data = load_resume()
+    return render_template("resume.html",
+                           page_title="Galabe Oryn - Resume",
+                           page_description="My Resume",
+                           og_image="images/logo2.jpg",
+                           **data)
 
 #
-# @app.route("/edit-project/<string:signed_id>", methods=["POST", "GET"])
-# @requires_auth
-# def edit_project(signed_id):
-#     form = Project()
-#     data_dict = load_data("data.json")
-#     found_key = None
-#     found_details = None
+# @app.route("/resume/download")
+# def download_resume():
+#     data = load_resume()
+#     # template
+#     resume_html = render_template("resume.html", **data)
 #
-#     for project_title, details in data_dict.items():
-#         if details["signed_id"] == signed_id:
-#             if verify_signed_id(signed_id=signed_id, project_id=str(details["project_id"])):
-#                 found_key = project_title
-#                 found_details = details
+#     # convert to pdf
+#     pdf = HTML(string=resume_html).write_pdf()
 #
-#                 form.title.data = details["title"]
-#                 form.overview.data = details["overview"]
-#                 form.description.data = details["description"]
-#                 form.link.data = details["link"]
-#                 break  # Stop after getting the correct project.
-#             else:
-#                return "The sign ID is invalid", 403
-#
-#     if not found_key:
-#         return "Project Not found", 404
-#
-#     if form.validate_on_submit():
-#         try:
-#             with open("data.json", "r") as file:
-#                 data = json.load(file)
-#             for project_title, details in data.items():
-#                 if details["signed_id"] == signed_id:
-#                     details["overview"] = form.overview.data
-#                     details["description"] = form.description.data
-#                     details["link"] = form.link.data
-#                     break
-#
-#             with open("data.json", "w") as file:
-#                 json.dump(data, file, indent=4)
-#             print("Data in data.json updated successfully")
-#         except FileNotFoundError:
-#             print("Error file not found")
-#         except json.JSONDecodeError:
-#             print("Error could not decode json")
-#         except Exception as e:
-#             print(f"Exception occurred: {e}")
-#         # new_key = form.title.data
-#         # updated_project_data = {
-#         #         "project_id": found_details['project_id'],
-#         #         "signed_id": signed_id,
-#         #         "title": form.title.data,
-#         #         "overview": form.overview.data,
-#         #         "description": form.description.data,
-#         #         "link": form.link.data,
-#         #         "gradient": f"aurora-{found_details['project_id']}"
-#         # }
-#         # if found_key != new_key:
-#         #     data_dict.pop(found_key, None)
-#         # data_dict[new_key] = updated_project_data
-#         # save(data_dict)
-#         return redirect(url_for("home"))
-#
-#     return render_template("addproject.html", form=form)
+#     # Serve downloadable pdf
+#     return send_file(
+#         io.BytesIO(pdf),
+#         mimetype="application/pdf",
+#         download_name="Galabe_Oryn_Resume.pdf"
+#     )
+
+@app.route("/contact", methods=["POST"])
+def contact():
+    name = request.form["name"]
+    sender_email = request.form["email"]
+    message = request.form["message"]
+    if send_email(name, sender_email, message):
+        return redirect(url_for("home"))
+    else:
+        return "Error sending message", 500
+
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -301,17 +209,19 @@ def logout():
         session.clear()
     return redirect(url_for("home"))
 
-
-@app.route("/contact", methods=["POST"])
-def contact():
-    name = request.form["name"]
-    sender_email = request.form["email"]
-    message = request.form["message"]
-    if send_email(name, sender_email, message):
-        return redirect(url_for("home"))
-    else:
-        return "Error sending message", 500
+#
+# @app.route("/download", methods=["POST", "GET"])
+# def download_resume2():
+#     try:
+#         client = pdfcrowd.HtmlToPdfClient("demo", "ce544b6ea52a5621fb9d55f8b542d14d")
+#         client.setContentViewportWidth("balanced")
+#         client.convertUrlToFile("http://127.0.0.1:5000/resume", "name.pdf")
+#     except pdfcrowd.Error as why:
+#         sys.stderr.write("PDFCrowd Error: {}\n".format(why))
+#         print(why)
+#     return redirect(request.url)
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True, host="0.0.0.0")
+

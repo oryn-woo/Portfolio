@@ -1,0 +1,143 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5dc; /* Retro beige */
+    color: #333;
+    line-height: 1.6;
+}
+
+.navbar {
+    background-color: #8b4513; /* Retro brown */
+    font-family: 'Special Elite', cursive;
+}
+
+.navbar-brand, .nav-link {
+    color: #fff !important;
+}
+
+.navbar-brand:hover, .nav-link:hover {
+    color: #f5f5dc !important;
+}
+
+#hero {
+    background: linear-gradient(rgba(139, 69, 19, 0.7), rgba(139, 69, 19, 0.7)), url('/static/images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 3px solid #fff;
+    border-radius: 50%;
+}
+
+.typewriter {
+    font-family: 'Special Elite', cursive;
+    color: #f5f5dc;
+}
+
+.section-title {
+    font-family: 'Special Elite', cursive;
+    color: #8b4513;
+    border-bottom: 2px solid #8b4513;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.project-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    background-color: #fff;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+.btn-primary {
+    background-color: #8b4513;
+    border-color: #8b4513;
+}
+
+.btn-primary:hover {
+    background-color: #a0522d;
+    border-color: #a0522d;
+}
+
+.custom-modal-content {
+    background: linear-gradient(270deg, #00ccff 25%, #0099ff 50%, #0066cc 75%, #003393 100%);
+    color: #fff;
+    border: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.custom-modal-header, .custom-modal-footer {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.custom-modal-header h5 {
+    font-size: 1.75rem;
+    font-weight: bold;
+}
+
+.custom-modal-body {
+    padding: 2rem;
+}
+
+.custom-modal-body p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+footer {
+    background-color: #8b4513;
+    color: #fff;
+    font-family: 'Special Elite', cursive;
+}
+
+i {
+    color: #8b4513;
+    margin-right: 5px;
+}
+
+/* Print-friendly styles */
+@media print {
+    body {
+        background-color: #fff;
+        color: #000;
+    }
+    .navbar, footer {
+        display: none;
+    }
+    .btn, .modal {
+        display: none;
+    }
+    a {
+        color: #000;
+        text-decoration: underline;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profile-img {
+        width: 120px;
+        height: 120px;
+    }
+    .display-3 {
+        font-size: 2.5rem;
+    }
+}

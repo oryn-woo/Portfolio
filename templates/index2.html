@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <meta property="og:description" content="{{ page_description }}">
+    <meta property="og:url" content="{{ request.url_root }}">
+    <meta property="og:image" content="{{ url_for('static', filename=og_image, _external=True) }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ page_title }}">
+    <meta name="twitter:description" content="{{ page_description }}">
+    <meta name="twitter:image" content="{{ url_for('static', filename=og_image, _external=True) }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="{{ url_for('static', filename='css/style2.css') }}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- My Sticky Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">{{ basic_info.name }}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#hero">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    {% if show_login %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                    {% endif %}
+                    {% if 'authenticated' in session %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="d-flex align-items-center text-center py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <img src="{{ url_for('static', filename='images/prof-img1.jpeg') }}" alt="Profile Image" class="rounded-circle mb-4 profile-img">
+                    <h1 class="display-3 mb-4 typewriter">{{ basic_info.name }}</h1>
+                    <h2 class="mb-4">Full Stack Developer & Python Enthusiast</h2>
+                    <p class="lead mb-4">I excel in: <strong>{{ skills.technical | join(', ') }}</strong></p>
+                    <a href="#projects" class="btn btn-primary btn-lg rounded-pill">My Projects</a>
+                    <a href="{{ url_for('resume') }}" class="btn btn-primary btn-lg rounded-pill">My Resume</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MY About Section -->
+    <section id="about" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title text-center mb-5"><i class="bi bi-person-circle"></i> About Me</h2>
+            <div class="row">
+                <div class="col-md-8 mx-auto text-center">
+                    <p class="lead">{{ summary }}</p>
+                    <h3 class="mt-4">Certifications</h3>
+                    {% for cert in certifications %}
+                    <div class="mb-3">
+                        <p><strong>{{ cert.title }}</strong> - {{ cert.platform }} ({{ cert.date }})</p>
+                        {% if cert.certificate_file %}
+                        <a href="{{ url_for('static', filename=cert.certificate_file) }}" class="btn btn-outline-primary btn-sm rounded-pill">Download Certificate</a>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-5">
+        <div class="container">
+            <h2 class="section-title text-center mb-5"><i class="bi bi-folder"></i> Projects</h2>
+            <div class="row g-4">
+                {% for project_name, project_details in projects.items() %}
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm project-card">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ project_details.title }}</h5>
+                            <p class="card-text flex-grow-1">{{ project_details.overview | truncate(100) }}</p>
+                            <div class="mt-auto text-center">
+                                <button class="btn btn-primary rounded-pill px-4 open-modal"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#projectModal-{{ project_details.project_id }}">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Reaching Out Section -->
+    <section id="contact" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title text-center mb-5"><i class="bi bi-envelope"></i> Contact Me</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <form action="{{ url_for('contact') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Your Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="4" placeholder="Your Message" required></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary rounded-pill">Send Message</button>
+                        </div>
+                    </form>
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <a href="https://wa.me/237650763705?text=Hi%20Oryn!" target="_blank" class="btn btn-success rounded-pill"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                        <a href="mailto:{{ basic_info.email }}" class="btn btn-primary rounded-pill"><i class="bi bi-envelope"></i> Email</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-3 text-center">
+        <p>© 2025 {{ basic_info.name }}. All rights reserved.</p>
+    </footer>
+<!-- Project Modals -->
+    {% for project_name, project_details in projects.items() %}
+    <div class="modal fade" id="projectModal-{{ project_details.project_id }}" tabindex="-1" aria-labelledby="projectModalLabel-{{ project_details.project_id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header custom-modal-header">
+                    <h5 class="modal-title" id="projectModalLabel-{{ project_details.project_id }}">{{ project_details.title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body custom-modal-body">
+                    <h6><strong>Overview:</strong> {{ project_details.overview }}</h6>
+                    <div>{{ project_details.description | safe }}</div>
+                    {% if project_details.link %}
+                    <a href="{{ project_details.link }}" class="btn btn-primary rounded-pill">To Repository</a>
+                    {% endif %}
+                </div>
+                <div class="modal-footer custom-modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                    {% if 'authenticated' in session %}
+                    <a href="{{ url_for('delete_project', signed_id=project_details.signed_id) }}" class="btn btn-danger">Delete</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Typewriter JavaScript Effect -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const text = document.querySelector('.typewriter');
+            const str = text.textContent;
+            text.textContent = '';
+            let i = 0;
+            function type() {
+                if (i < str.length) {
+                    text.textContent += str.charAt(i);
+                    i++;
+                    setTimeout(type, 100);
+                }
+            }
+            setTimeout(type, 500);
+        });
+    </script>
+</body>
+</html>

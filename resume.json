@@ -1,0 +1,101 @@
+{
+  "basic_info": {
+    "name": "Galabe Oryn",
+    "phone": "+237 650 763 705",
+    "email": "oryngalabe@gmail.com",
+    "portfolio": "https://portfolio-site-uihj.onrender.com"
+  },
+  "summary": "I am proficient in Python and recently completed the 100 Days of Code bootcamp by Dr. Angela Yu. I excel in Python, Django, Flask, HTML, CSS, and SQLAlchemy. I’ve built multiple real-world projects, focusing on problem-solving and delivering high-quality solutions.",
+  "certifications": [
+    {
+      "title": "100 Days of Code: The Complete Python Pro Bootcamp",
+      "platform": "Udemy",
+      "date": "April 17, 2025",
+      "highlights": [
+        "APIs, Web Scraping & Automation",
+        "Web Development with Django and Flask",
+        "Command-Line Tools & REST APIs",
+        "Database Design & SQLAlchemy ORM",
+        "Data Analysis & Visualization with Jupyter"
+      ],
+      "certificate_file": "certifications/udemy-cert.pdf"
+    }
+  ],
+  "skills": {
+    "technical": [
+      "Python", "Django", "Flask", "Web Scraping & Automation",
+      "HTML", "CSS", "SQLAlchemy ORM",
+      "REST APIs", "Data Analysis & Visualization",
+      "GUI (Tkinter)"
+    ],
+    "tools": [
+      "PyCharm", "VS Code", "GitHub", "SQLite",
+      "Postman", "draw.io"
+    ],
+    "soft": [
+      "Problem Solving", "Critical Thinking",
+      "Communication", "Time Management", "Adaptability"
+    ]
+  },
+  "projects": [
+    {
+      "name": "Bambili Housing / eCommerce",
+      "tech": ["Bootstrap", "Python", "Flask", "SQLAlchemy", "Google Maps"],
+      "description": "A platform allowing students to remotely browse and rent houses—no physical visits required—and facilitating e-commerce for campus businesses."
+    },
+    {
+      "name": "Portfolio Website",
+      "tech": ["Flask", "Python", "Bootstrap"],
+      "description": "A responsive, mobile-friendly site showcasing my work and skills."
+    },
+    {
+      "name": "Directory Hierarchy Organizer",
+      "tech": ["Python"],
+      "description": "A script that converts house survey data—images, videos and descriptions—into a neatly organized folder structure ready for upload."
+    },
+    {
+      "name": "Color Hunt App",
+      "tech": ["Tkinter"],
+      "description": "Extracts the color palette from any uploaded image and displays it along with hex codes."
+    },
+    {
+      "name": "Space Invaders",
+      "tech": ["Python Turtle", "OOP"],
+      "description": "A retro‐style arcade game recreation, complete with levels and scoring."
+    },
+    {
+      "name": "Tic-Tac-Toe",
+      "tech": ["Tkinter", "ttk"],
+      "description": "A GUI & text-based version of the classic game, featuring animations and user feedback."
+    },
+    {
+      "name": "PDF to Audio Book",
+      "tech": ["pyttsx3", "pdfplumber", "pydub", "Tkinter"],
+      "description": "Converts PDFs into narrated audio files for easier study."
+    },
+    {
+      "name": "Cafe WiFi Site",
+      "tech": ["Flask", "Python", "Bootstrap", "SQLAlchemy"],
+      "description": "A vibrant site for locating cafes with Wi-Fi, complete with smooth transitions."
+    },
+    {
+      "name": "Watermark App",
+      "tech": ["Tkinter", "PIL"],
+      "description": "Allows users to apply customizable watermarks to images in a simple GUI."
+    },
+    {
+      "name": "Disappearing Text App",
+      "tech": ["Tkinter"],
+      "description": "Automatically clears user data after inactivity, with adjustable timers."
+    },
+    {
+      "name": "Arcade Breakout Game",
+      "tech": ["Python Turtle"],
+      "description": "A faithful breakout game clone with enhanced gameplay features."
+    }
+  ],
+  "languages": ["English (Fluent)", "French (Basic)"],
+  "extras": {
+    "hobbies": ["Biomimicry Enthusiast", "Maintenance & Repair Technician"]
+  }
+}

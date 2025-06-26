@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:description" content="{{ page_description }}">
+    <meta property="og:url" content="{{ request.url_root }}">
+    <meta property="og:image" content="{{ url_for('static', filename=og_image, _external=True) }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ page_title }}">
+    <meta name="twitter:description" content="{{ page_description }}">
+    <meta name="twitter:image" content="{{ url_for('static', filename=og_image, _external=True) }}">
+    <title>{{ basic_info.name }} - Resume</title>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+    <!-- Add Bootstrap Icons CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #f5f5dc;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .resume {
+            width: 80%;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-family: 'Special+Elite', cursive;
+            font-size: 2.5em;
+            color: #8b4513;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1em;
+        }
+
+        section {
+            margin-top: 20px;
+        }
+
+        section h2 {
+            font-family: 'Special+Elite', cursive;
+            font-size: 1.8em;
+            color: #8b4513;
+            border-bottom: 2px solid #8b4513;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        section h3 {
+            font-family: 'Special+Elite', cursive;
+            font-size: 1.4em;
+            margin-top: 15px;
+            color: #555;
+        }
+
+        ul {
+            list-style-type: square;
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        .project {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fafafa;
+        }
+
+        a {
+            color: #8b4513;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #a0522d;
+        }
+
+
+        i {
+            color: #8b4513;
+            margin-right: 5px;
+        }
+
+        /* Print for making sure printing is clean  */
+        @media print {
+            body {
+                background-color: white;
+                color: black;
+            }
+            .resume {
+                box-shadow: none;
+                border: none;
+            }
+            a {
+                color: black;
+                text-decoration: underline;
+            }
+        }
+
+        /* Adjustments for responsiveness */
+        @media (max-width: 600px) {
+            .resume {
+                width: 95%;
+                padding: 15px;
+            }
+            header h1 {
+                font-size: 2em;
+            }
+            section h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume">
+        <!-- Contact Info -->
+        <header>
+            <h1>{{ basic_info.name }}</h1>
+            <p>
+                <i class="bi bi-telephone" aria-hidden="true"></i> Phone: {{ basic_info.phone }} |
+                <i class="bi bi-envelope" aria-hidden="true"></i> Email: <a href="mailto:{{ basic_info.email }}">{{ basic_info.email }}</a> |
+                <i class="bi bi-link" aria-hidden="true"></i> Portfolio: <a href="{{ basic_info.portfolio }}">{{ basic_info.portfolio }}</a>
+            </p>
+        </header>
+
+        <!-- Summary Info -->
+        <section class="summary">
+            <h2><i class="bi bi-file-text" aria-hidden="true"></i> Summary</h2>
+            <p>{{ summary }}</p>
+        </section>
+
+        <!-- Skills Info -->
+        <section class="skills">
+            <h2><i class="bi bi-tools" aria-hidden="true"></i> Skills</h2>
+            <h3>Technical</h3>
+            <ul>
+                {% for skill in skills.technical %}
+                <li>{{ skill }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Tools</h3>
+            <ul>
+                {% for tool in skills.tools %}
+                <li>{{ tool }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Soft Skills</h3>
+            <ul>
+                {% for soft in skills.soft %}
+                <li>{{ soft }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <!-- Projects  -->
+        <section class="projects">
+            <h2><i class="bi bi-folder" aria-hidden="true"></i> Projects</h2>
+            {% for project in projects %}
+            <div class="project">
+                <h3>{{ project.name }}</h3>
+                <p><strong>Tech:</strong> {{ project.tech | join(', ') }}</p>
+                <p>{{ project.description }}</p>
+            </div>
+            {% endfor %}
+        </section>
+
+        <!-- Certifications and Download Link -->
+        <section class="certifications">
+            <h2><i class="bi bi-award" aria-hidden="true"></i> Certifications</h2>
+            {% for cert in certifications %}
+            <div class="certification">
+                <h3>{{ cert.title }}</h3>
+                <p><strong>Platform:</strong> {{ cert.platform }} | <strong>Date:</strong> {{ cert.date }}</p>
+                <ul>
+                    {% for highlight in cert.highlights %}
+                    <li>{{ highlight }}</li>
+                    {% endfor %}
+                </ul>
+                {% if cert.certificate_file %}
+                <p><a href="{{ url_for('static', filename=cert.certificate_file) }}">Download Certificate</a></p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </section>
+
+        <!-- Languages -->
+        <section class="languages">
+            <h2><i class="bi bi-translate" aria-hidden="true"></i> Languages</h2>
+            <ul>
+                {% for lang in languages %}
+                <li>{{ lang }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <!-- Extras  -->
+        <section class="extras">
+            <h2><i class="bi bi-star" aria-hidden="true"></i> Extras</h2>
+            <h3>Hobbies</h3>
+            <ul>
+                {% for hobby in extras.hobbies %}
+                <li>{{ hobby }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+</body>
+</html>
