@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4488387-4c86-480d-aeaf-f8be9a7d8df6" name="Changes" comment="Update my template and add a resume page">
+    <list default="true" id="d4488387-4c86-480d-aeaf-f8be9a7d8df6" name="Changes" comment="bug fixes">
+      <change afterPath="$PROJECT_DIR$/static/certifications/resume.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index2.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,8 +65,8 @@
       <recent name="C:\Users\Galabe-PC\PycharmProjects\portfolio3\" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Galabe-PC\PycharmProjects\portfolio3\static\images" />
       <recent name="C:\Users\Galabe-PC\PycharmProjects\portfolio3\static\certifications" />
+      <recent name="C:\Users\Galabe-PC\PycharmProjects\portfolio3\static\images" />
       <recent name="C:\Users\Galabe-PC\PycharmProjects\portfolio3\static\css" />
     </key>
   </component>
@@ -180,7 +182,23 @@
       <option name="project" value="LOCAL" />
       <updated>1750982197698</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Removed unnecessary dependencies">
+      <option name="closed" value="true" />
+      <created>1750983183557</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1750983183557</updated>
+    </task>
+    <task id="LOCAL-00014" summary="bug fixes">
+      <option name="closed" value="true" />
+      <created>1750983245464</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1750983245464</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -206,6 +224,8 @@
     <MESSAGE value="updated the requirements.txt file to represent the current status of the application" />
     <MESSAGE value="rename my image to lowercase, and ensure flask is serving static files correctly" />
     <MESSAGE value="Update my template and add a resume page" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update my template and add a resume page" />
+    <MESSAGE value="Removed unnecessary dependencies" />
+    <MESSAGE value="bug fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="bug fixes" />
   </component>
 </project>

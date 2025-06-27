@@ -218,6 +218,11 @@ def logout():
 #     return redirect(request.url)
 
 
+@app.route("/pdf-resume")
+def serve_resume():
+    return send_file("static/certifications/resume.pdf", as_attachment=False)
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
 
