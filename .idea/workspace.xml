@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4488387-4c86-480d-aeaf-f8be9a7d8df6" name="Changes" comment="rename my image to lowercase, and ensure flask is serving static files correctly">
-      <change afterPath="$PROJECT_DIR$/resume.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/certifications/udemy-cert.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/logo1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/logo2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/resume.html" afterDir="false" />
+    <list default="true" id="d4488387-4c86-480d-aeaf-f8be9a7d8df6" name="Changes" comment="Update my template and add a resume page">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data.json" beforeDir="false" afterPath="$PROJECT_DIR$/data.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -178,7 +172,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746332781555</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Update my template and add a resume page">
+      <option name="closed" value="true" />
+      <created>1750982197698</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1750982197698</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -203,6 +205,7 @@
     <MESSAGE value="upgrades in forms to reflect current updates and taking care of the Markup safe" />
     <MESSAGE value="updated the requirements.txt file to represent the current status of the application" />
     <MESSAGE value="rename my image to lowercase, and ensure flask is serving static files correctly" />
-    <option name="LAST_COMMIT_MESSAGE" value="rename my image to lowercase, and ensure flask is serving static files correctly" />
+    <MESSAGE value="Update my template and add a resume page" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update my template and add a resume page" />
   </component>
 </project>

@@ -10,12 +10,8 @@ from functools import wraps
 import hmac
 import hashlib
 import smtplib
-from email.mime.multipart import  MIMEMultipart
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-# from weasyprint import HTML
-import io
-import sys
-import pdfcrowd
 
 app = Flask(__name__, static_url_path='/static')
 
